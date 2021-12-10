@@ -114,9 +114,9 @@ class kel103(object):
         #return int(s)
 
     def getBatteryTime(self):
-        s = self.device.udpSendRecv(':Batt:TIM?')
+        s = self.device.udpSendRecv(':BATT:TIM?')
         print(s)
-        return float(s.strip('S\n'))
+        return float(s.strip('M\n'))
 
     def getBatteryCapacity(self):
         s = self.device.udpSendRecv(':BATT:CAP?')

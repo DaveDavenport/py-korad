@@ -40,7 +40,7 @@ kel.setOutput(True)
 startTime = time.time()
 missedSuccessiveSamples = 0
 
-logfile = open("test_" + str(time.time()) + ".png", "x")
+logfile = open("test_" + str(time.time()) + ".csv", "x")
 
 while kel.checkOutput():
     try:
