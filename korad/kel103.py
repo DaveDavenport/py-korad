@@ -102,20 +102,24 @@ class kel103(object):
 
     # Battery
     def setBatteryMode(self, index,rangeA,dischargeA,cutoffV,cutoffAH,time):
-        cmd = ':BATT '+str(index)+','+str(rangeA)+'A,'+str(dischargeA)+'A,'+str(cutoffV)+'V,'+str(cutoffAH)+'AH,'+str(time)+'S';
-        s = self.device.udpSend(cmd)
-        print(s)
+        cmd = str(':BATT ')+str(index)+','+str(rangeA)+'A,'+str(dischargeA)+'A,'+str(cutoffV)+'V,'+str(cutoffAH)+'AH,'+str(time)+'M';
+        print(cmd)
+        self.device.udpSend(cmd)
 
     def setBatteryRecall(self,index):
-        s = self.device.udpSend(':RCL:Batt '+str(index))
+        self.device.udpSend(':RCL:BATT '+str(index))
+    def getBatteryRecall(self):
+        s = self.device.udpSendRecv(':RCL:BATT?')
+        print(s)
+        #return int(s)
 
     def getBatteryTime(self):
-        s = self.device.udpSend(':Batt:TIM')
+        s = self.device.udpSendRecv(':Batt:TIM?')
         print(s)
         return float(s.strip('S\n'))
 
     def getBatteryCapacity(self):
-        s = self.device.udpSend(':BATT:CAP')
+        s = self.device.udpSendRecv(':BATT:CAP?')
         print(s)
         return float(s.strip('AH\n'))
 

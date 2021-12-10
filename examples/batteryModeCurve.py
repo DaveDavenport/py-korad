@@ -16,15 +16,19 @@ dischargeRate = 1.0
 MISSED_LIMIT = 10 # amount of missed samples that is allowed
 
 # setup the device (the IP of your ethernet/wifi interface, the IP of the Korad device)
-kel = kel103.kel103("192.168.8.126", "192.168.8.128", 18190)
-kel.checkDevice()
+kel = kel103.kel103("192.168.1.56", "10.10.10.186", 18190)
+if not kel.checkDevice():
+    raise Exception("Failed to connect to device!")
 
 # a quick battery test
 kel.setOutput(False)        
 #voltage = kel.measureVolt()
 #kel.setCurrent(dischargeRate)
-kel.setBatteryMode(4,10,dischargeRate,cutOffVoltage,100AH,60*60*10)
+kel.setBatteryMode(4,10,dischargeRate,cutOffVoltage,100,60*10)
 kel.setBatteryRecall(4)
+kel.getBatteryRecall()
+
+
 voltageData = []
 timeData = []
 capacityData = []
@@ -43,14 +47,17 @@ while kel.checkOutput():
         voltage = kel.measureVolt()
         current = kel.measureCurrent()
         voltageData.append(voltage)
+        print('a')
         # Only append the timedata when volt/current measurements went fine.
         # This is because the voltage or current measurement could fail
         # and then the x and y-axis would have different dimentions
         timeData.append(current_time)
 
+        print('b')
         # solve the current stuff as a running accumulation
         capacity = kel.getBatteryCapacity() #((startTime - time.time()) / 60 / 60) * current
         capacityData.append(capacity)
+        print('c')
 
         print("Voltage: " + str(voltage) + " V DC, Capacity: " + str(capacity) + " Ah")
         time.sleep(0.25)
