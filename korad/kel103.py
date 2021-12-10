@@ -100,6 +100,26 @@ class kel103(object):
         if self.measureSetCurrent() != current:
             raise ValueError('Current set incorectly on the device')
 
+    # Battery
+    def setBatteryMode(self, index,rangeA,dischargeA,cutoffV,cutoffAH,time):
+        cmd = ':BATT '+str(index)+','+str(rangeA)+'A,'+str(dischargeA)+'A,'+str(cutoffV)+'V,'+str(cutoffAH)+'AH,'+str(time)+'S';
+        s = self.device.udpSend(cmd)
+        print(s)
+
+    def setBatteryRecall(self,index):
+        s = self.device.udpSend(':RCL:Batt '+str(index))
+
+    def getBatteryTime(self):
+        s = self.device.udpSend(':Batt:TIM')
+        print(s)
+        return float(s.strip('S\n'))
+
+    def getBatteryCapacity(self):
+        s = self.device.udpSend(':BATT:CAP')
+        print(s)
+        return float(s.strip('AH\n'))
+
+
     def checkOutput(self):
         s = self.device.udpSendRecv(':INP?')
         if 'OFF' in s:
