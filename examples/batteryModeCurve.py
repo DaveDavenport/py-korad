@@ -12,7 +12,7 @@ from korad import kel103
 
 #test proporties
 cutOffVoltage = 2.5
-dischargeRate = 1.0
+dischargeRate = 2.0
 MISSED_LIMIT = 10 # amount of missed samples that is allowed
 
 # setup the device (the IP of your ethernet/wifi interface, the IP of the Korad device)
@@ -62,7 +62,9 @@ while kel.checkOutput():
 
         print("Voltage: " + str(voltage) + " V DC, Capacity: " + str(capacity) + " Ah")
 
-        logfile.write(str(runtime)+','+str(voltage)+','+str(current)+','+str(power)+','+str(capacity)+'\n')
+        k = "{:6.2f},{:9.4f},{:8.4f},{:7.3f},{:8.4f}\n".format(runtime,voltage,current,power,capacity)
+        print(k)
+        logfile.write(k)
         logfile.flush()
 
         time.sleep(0.50)
