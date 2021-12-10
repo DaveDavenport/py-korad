@@ -50,18 +50,15 @@ while kel.checkOutput():
         current = kel.measureCurrent()
         power   = kel.measurePower()
         voltageData.append(voltage)
-        print('a')
         # Only append the timedata when volt/current measurements went fine.
         # This is because the voltage or current measurement could fail
         # and then the x and y-axis would have different dimentions
         timeData.append(current_time)
 
-        print('b')
         # solve the current stuff as a running accumulation
         capacity = kel.getBatteryCapacity() #((startTime - time.time()) / 60 / 60) * current
         runtime = kel.getBatteryTime()
         capacityData.append(capacity)
-        print('c')
 
         print("Voltage: " + str(voltage) + " V DC, Capacity: " + str(capacity) + " Ah")
 
