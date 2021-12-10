@@ -1,6 +1,6 @@
-"""This sample program will use the kel103 to test a batteries capacity and 
+"""This sample program will use the kel103 to test a batteries capacity and
 show this information in matplotlib. This method is an aproximation and its resolution
-can be increase with sampling rate. 
+can be increase with sampling rate.
 """
 import socket
 import time
@@ -21,7 +21,7 @@ if not kel.checkDevice():
     raise Exception("Failed to connect to device!")
 
 # a quick battery test
-kel.setOutput(False)        
+kel.setOutput(False)
 #voltage = kel.measureVolt()
 #kel.setCurrent(dischargeRate)
 kel.setBatteryMode(4,10,dischargeRate,cutOffVoltage,100,60*10)
@@ -40,12 +40,15 @@ kel.setOutput(True)
 startTime = time.time()
 missedSuccessiveSamples = 0
 
+logfile = open("test_" + str(time.time()) + ".png", "x")
+
 while kel.checkOutput():
     try:
         # store the time before measuring volt/current
         current_time = (time.time() - startTime)
         voltage = kel.measureVolt()
         current = kel.measureCurrent()
+        power   = kel.measurePower()
         voltageData.append(voltage)
         print('a')
         # Only append the timedata when volt/current measurements went fine.
@@ -56,11 +59,16 @@ while kel.checkOutput():
         print('b')
         # solve the current stuff as a running accumulation
         capacity = kel.getBatteryCapacity() #((startTime - time.time()) / 60 / 60) * current
+        runtime = kel.getBatteryTime()
         capacityData.append(capacity)
         print('c')
 
         print("Voltage: " + str(voltage) + " V DC, Capacity: " + str(capacity) + " Ah")
-        time.sleep(0.25)
+
+        logfile.write(str(runtime)+','+str(voltage)+','+str(current)+','+str(power)+','+str(capacity)+'\n')
+        logfile.flush()
+
+        time.sleep(0.50)
         missedSuccessiveSamples = 0
     except Exception as e:
         print(e)
@@ -71,6 +79,8 @@ while kel.checkOutput():
 # disable the output
 kel.setOutput(False)
 kel.endComm()
+
+logfile.close()
 
 # plot the finished data
 fig, ax = plt.subplots()
